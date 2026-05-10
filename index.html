@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Vietnam War GitHub Interface</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:#2b2b24;
+    font-family:'IBM Plex Mono', monospace;
+    color:#1d1d1d;
+    overflow-x:hidden;
+}
+
+.paper{
+    width:100%;
+    min-height:100vh;
+    background:
+        linear-gradient(rgba(201,190,150,0.92), rgba(201,190,150,0.92)),
+        url('https://www.transparenttextures.com/patterns/old-map.png');
+    padding:20px;
+    border:12px solid #2f2417;
+    box-shadow:inset 0 0 120px rgba(0,0,0,0.45);
+}
+
+/* HEADER */
+
+.header{
+    border-bottom:2px solid rgba(0,0,0,0.4);
+    padding-bottom:18px;
+    margin-bottom:18px;
+}
+
+.header-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    flex-wrap:wrap;
+    gap:20px;
+}
+
+.classified{
+    color:#7a1111;
+    font-size:2rem;
+    font-weight:bold;
+    letter-spacing:2px;
+}
+
+.sub{
+    font-size:0.8rem;
+    margin-top:5px;
+}
+
+.title{
+    text-align:center;
+    flex:1;
+}
+
+.title h1{
+    font-family:'Special Elite', cursive;
+    letter-spacing:3px;
+    font-size:2.3rem;
+}
+
+.title p{
+    margin-top:6px;
+    font-size:0.9rem;
+}
+
+.file-info{
+    text-align:right;
+    font-size:0.9rem;
+}
+
+.stamp{
+    border:3px solid #9b1b1b;
+    color:#9b1b1b;
+    display:inline-block;
+    padding:8px 14px;
+    margin-top:10px;
+    font-weight:bold;
+    transform:rotate(-2deg);
+}
+
+/* NAV */
+
+.nav{
+    display:flex;
+    gap:30px;
+    padding:16px 0;
+    border-bottom:2px solid rgba(0,0,0,0.25);
+    margin-bottom:20px;
+    flex-wrap:wrap;
+}
+
+.nav a{
+    text-decoration:none;
+    color:#1a1a1a;
+    font-weight:bold;
+    transition:0.2s;
+}
+
+.nav a:hover{
+    color:#7a1111;
+}
+
+/* LAYOUT */
+
+.layout{
+    display:grid;
+    grid-template-columns:280px 1fr 280px;
+    gap:20px;
+}
+
+.panel{
+    border:1px solid rgba(0,0,0,0.35);
+    background:rgba(255,255,255,0.08);
+    padding:15px;
+    box-shadow:inset 0 0 10px rgba(0,0,0,0.08);
+}
+
+.sidebar-title{
+    font-weight:bold;
+    margin-bottom:15px;
+    border-bottom:1px solid rgba(0,0,0,0.25);
+    padding-bottom:8px;
+}
+
+/* FILES */
+
+.repo-file{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:10px;
+    border-bottom:1px dashed rgba(0,0,0,0.18);
+    transition:0.2s;
+    cursor:pointer;
+}
+
+.repo-file:hover{
+    background:rgba(0,0,0,0.05);
+}
+
+.folder{
+    color:#4a3f17;
+}
+
+.main-content{
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+}
+
+.repo-header{
+    border:1px solid rgba(0,0,0,0.3);
+    padding:20px;
+    background:rgba(255,255,255,0.06);
+}
+
+.repo-header h2{
+    font-size:2rem;
+    margin:10px 0;
+}
+
+.repo-desc{
+    margin-bottom:18px;
+}
+
+.top-secret{
+    display:inline-block;
+    border:3px solid #8e1414;
+    color:#8e1414;
+    padding:5px 12px;
+    font-weight:bold;
+    transform:rotate(-3deg);
+}
+
+.repo-stats{
+    display:flex;
+    gap:25px;
+    flex-wrap:wrap;
+    margin-top:15px;
+}
+
+.file-table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:0.95rem;
+}
+
+.file-table th,
+.file-table td{
+    border-bottom:1px solid rgba(0,0,0,0.18);
+    padding:12px;
+    text-align:left;
+}
+
+.file-table th{
+    background:rgba(0,0,0,0.08);
+}
+
+.readme{
+    padding:20px;
+    border:1px solid rgba(0,0,0,0.3);
+    background:rgba(255,255,255,0.05);
+    min-height:250px;
+    position:relative;
+}
+
+.watermark{
+    position:absolute;
+    bottom:20px;
+    right:30px;
+    font-size:4rem;
+    opacity:0.08;
+    transform:rotate(-15deg);
+    font-weight:bold;
+}
+
+/* RIGHT SIDE */
+
+.profile{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:15px;
+}
+
+.avatar{
+    width:45px;
+    height:45px;
+    background:#3d3d3d;
+    border-radius:50%;
+    border:2px solid #111;
+}
+
+.contributor{
+    padding:10px 0;
+    border-bottom:1px dashed rgba(0,0,0,0.18);
+}
+
+/* FOOTER */
+
+.footer{
+    margin-top:25px;
+    padding-top:12px;
+    border-top:2px solid rgba(0,0,0,0.25);
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    font-size:0.85rem;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1200px){
+    .layout{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:700px){
+
+    .title h1{
+        font-size:1.5rem;
+    }
+
+    .repo-header h2{
+        font-size:1.4rem;
+    }
+
+    .nav{
+        gap:15px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="paper">
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <div class="header-top">
+
+            <div>
+                <div class="classified">RESTRICTED</div>
+                <div class="sub">
+                    SECURITY INFORMATION<br>
+                    NOT FOR PUBLIC RELEASE
+                </div>
+            </div>
+
+            <div class="title">
+                <h1>DEPARTMENT OF THE ARMY</h1>
+                <p>
+                    REPUBLIC OF VIETNAM<br>
+                    MILITARY ASSISTANCE COMMAND, VIETNAM
+                </p>
+            </div>
+
+            <div class="file-info">
+                FILE NO. MACV-SIGINT-71-0427<br>
+                DATE: 21 APR 1971
+                <div class="stamp">EYES ONLY</div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- NAV -->
+
+    <div class="nav">
+        <a href="#">COMMAND CENTER</a>
+        <a href="#">REPOSITORIES</a>
+        <a href="#">ISSUES</a>
+        <a href="#">PULL REQUESTS</a>
+        <a href="#">PROJECTS</a>
+        <a href="#">WIKI</a>
+        <a href="#">SECURITY</a>
+        <a href="#">INSIGHTS</a>
+    </div>
+
+    <!-- MAIN -->
+
+    <div class="layout">
+
+        <!-- LEFT -->
+
+        <div class="panel">
+
+            <div class="sidebar-title">
+                OPERATION FALCON<br>
+                CODE REPOSITORIES
+            </div>
+
+            <div class="repo-file">
+                <span class="folder">📁</span>
+                operation-falcon-core
+            </div>
+
+            <div class="repo-file">
+                <span class="folder">📁</span>
+                intel-processing-unit
+            </div>
+
+            <div class="repo-file">
+                <span class="folder">📁</span>
+                comms-encryption-suite
+            </div>
+
+            <div class="repo-file">
+                <span class="folder">📁</span>
+                map-visualizer
+            </div>
+
+            <div class="repo-file">
+                <span class="folder">📁</span>
+                logistics-scheduler
+            </div>
+
+            <div class="repo-file">
+                <span class="folder">📁</span>
+                legacy-archive
+            </div>
+
+        </div>
+
+        <!-- CENTER -->
+
+        <div class="main-content">
+
+            <div class="repo-header">
+
+                <div class="top-secret">TOP SECRET</div>
+
+                <h2>operation-falcon-core</h2>
+
+                <div class="repo-desc">
+                    Codebase for MACV tactical operations and battlefield coordination systems.
+                </div>
+
+                <div class="repo-stats">
+                    <div>243 COMMITS</div>
+                    <div>7 BRANCHES</div>
+                    <div>5 CONTRIBUTORS</div>
+                    <div>CLASSIFICATION: SECRET</div>
+                </div>
+
+            </div>
+
+            <div class="panel">
+
+                <table class="file-table">
+
+                    <thead>
+                        <tr>
+                            <th>FILE NAME</th>
+                            <th>DESCRIPTION</th>
+                            <th>CLASS</th>
+                            <th>DATE</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <tr>
+                            <td>src/</td>
+                            <td>Tactical engine refactor</td>
+                            <td>S</td>
+                            <td>19 APR 1971</td>
+                        </tr>
+
+                        <tr>
+                            <td>lib/</td>
+                            <td>Encryption library update</td>
+                            <td>S</td>
+                            <td>18 APR 1971</td>
+                        </tr>
+
+                        <tr>
+                            <td>docs/</td>
+                            <td>Updated system documentation</td>
+                            <td>C</td>
+                            <td>17 APR 1971</td>
+                        </tr>
+
+                        <tr>
+                            <td>tests/</td>
+                            <td>Added communications tests</td>
+                            <td>C</td>
+                            <td>16 APR 1971</td>
+                        </tr>
+
+                        <tr>
+                            <td>README.md</td>
+                            <td>Project overview</td>
+                            <td>R</td>
+                            <td>10 APR 1971</td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <div class="readme">
+
+                <h2>OPERATION FALCON CORE SYSTEM</h2>
+
+                <br>
+
+                <p>
+                    DESCRIPTION:
+                    <br><br>
+
+                    Centralized battlefield coordination software utilized by MACV tactical
+                    command personnel for communications, tracking, logistics, and intelligence processing.
+                </p>
+
+                <div class="watermark">
+                    MACV
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- RIGHT -->
+
+        <div class="panel">
+
+            <div class="sidebar-title">
+                CLASSIFICATION
+            </div>
+
+            <div class="stamp">
+                SECRET
+            </div>
+
+            <br><br>
+
+            HANDLE VIA COMINT CHANNELS ONLY
+            <br><br>
+
+            DISSEMINATION CONTROL:
+            <br>
+            US ARMY PERSONNEL ONLY
+
+            <br><br><br>
+
+            <div class="sidebar-title">
+                CONTRIBUTORS
+            </div>
+
+            <div class="contributor">
+                COL. HARRISON<br>
+                Commanding Officer
+            </div>
+
+            <div class="contributor">
+                MAJ. THOMPSON<br>
+                Lead Developer
+            </div>
+
+            <div class="contributor">
+                CAPT. REYES<br>
+                Systems Engineer
+            </div>
+
+            <div class="contributor">
+                LT. WALKER<br>
+                Software Analyst
+            </div>
+
+            <div class="contributor">
+                SGT. MILLER<br>
+                DevOps Specialist
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- FOOTER -->
+
+    <div class="footer">
+
+        <div>
+            MACV COMMAND NETWORK
+        </div>
+
+        <div>
+            AUTH CODE: DELTA-7
+        </div>
+
+        <div>
+            SESSION TIME: 00:42:17
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
